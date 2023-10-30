@@ -18,7 +18,7 @@ contract calSignature {
 
         bytes32 structHash = keccak256(abi.encode(
                 bytes32(SELLORDER_TYPEHASH),
-                address(0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf),//sellOrder.seller,
+                address(0x9dF0C6b0066D5317aA5b38B36850548DaCCa6B4e),//sellOrder.seller,
                 address(0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f),//sellOrder.contractAddress,
                 uint256(1),//sellOrder.tokenId,
                 uint256(1),//sellOrder.startTime,
@@ -31,12 +31,12 @@ contract calSignature {
 
         bytes32 digest = ECDSA.toTypedDataHash(DOMAIN_SEPARATOR, structHash);
         // 我需要做的是：用私钥对digest进行签名:
-        return digest; // 0xce5f60b81b1d753a9653d31bfe0b00aa861dc1f7b58aeae374d9c0c8d82389e3
+        return digest; // 0xfcbcbc280d251a242fa4dcde6ed925b544f76b504a68bc02ec49171c0e6bc963
         // 然后得到签名
         //      chain=Chain(config.optimismAPI)
-        //      account=Account(chain,"0000000000000000000000000000000000000000000000000000000000000001")
-        //      account.SignMessageHash("0xce5f60b81b1d753a9653d31bfe0b00aa861dc1f7b58aeae374d9c0c8d82389e3")
-        //      signature= 0xed60c44be131f7252ba5b53a3a56ab340a5231c122f454e37fed4302a4ae5568191eee46f491eefd3c0aeb895f9045ded4c55194e204647a78528e34085b9ef81b
+        //      account=Account(chain,"97154a62cd5641a577e092d2eee7e39fcb3333dc595371a4303417dae0c2c006")
+        //      account.SignMessageHash("0xfcbcbc280d251a242fa4dcde6ed925b544f76b504a68bc02ec49171c0e6bc963")
+        //      signature= 0xf39b078814b22a5fc0a3afd98485786acd332e1cc1bd7bc349b98dffafeb431c626776d5a6df000c4650b6e6364fb4097ad71f02c2c46134154820a65f4f77781b
     }
 
 }
